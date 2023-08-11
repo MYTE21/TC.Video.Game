@@ -1,2 +1,2 @@
-# VGGC
-Video Game Genre Classification
+# TC Video Game
+`Text Classification Video Game`
