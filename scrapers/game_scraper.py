@@ -3,12 +3,9 @@ from selenium.webdriver.common.by import By
 import pandas as pd
 import json
 from tqdm import tqdm
+import os
 
 columns = ["Name", "Summary", "Link"]
-
-
-def game_details():
-    pass
 
 
 def get_all_game():
@@ -19,27 +16,46 @@ def get_all_game():
     start_page, end_page = read_page_no()
 
     for page_id in tqdm(range(start_page, end_page)):
-        print(f"\nPage No: {page_id + 1}")
         url = f"https://www.metacritic.com/browse/games/score/metascore/all/all/?page={page_id}"
         driver.get(url)
 
         browser_list = driver.find_elements(By.CLASS_NAME, "browse_list_wrapper")
-        # print("Browser: ", len(browser_list))
         for browser in browser_list:
             game_table = browser.find_element(By.CLASS_NAME, "clamp-list")
             game_row = game_table.find_elements(By.TAG_NAME, "tr")
             for i, ar in enumerate(game_row):
                 if i % 2 == 0:
+                    game_detail = ar.find_elements(By.TAG_NAME, "td")[1].text.split("\n")
                     table_list = browser.find_element(By.XPATH, "//tr").find_elements(By.XPATH, "//td")[i]
                     link = table_list.find_element(By.TAG_NAME, "a").get_attribute("href")
-                    game_detail = ar.find_elements(By.TAG_NAME, "td")[1].text.split("\n")
-                    total_games += 1
-                    # print(f"({i}): {game_detail} \n link: {link}")
+                    game_info = {
+                        "Name": game_detail[2],
+                        "Summary": game_detail[5],
+                        "Link": link
+                    }
+                    game_data.append(game_info)
+
+        game_data_save(game_data)
+        game_data.clear()
 
         write_page_no(start_page + 1, end_page)
-        print("Total games: ", total_games)
 
     driver.close()
+
+
+def game_data_save(game_data):
+    path = os.path.join("../data/raw_data", "game_data.csv")
+
+    if not os.path.isfile(path):
+        df = pd.DataFrame(data=game_data, columns=columns)
+        df.to_csv(path, index=False)
+        return df.shape[0]
+    else:
+        new_df = pd.DataFrame(data=game_data, columns=columns)
+        ex_df = pd.read_csv(path)
+        combine_df = pd.concat([ex_df, new_df], ignore_index=True)
+        combine_df.to_csv(path, index=False)
+        return combine_df.shape[0]
 
 
 def read_page_no():
