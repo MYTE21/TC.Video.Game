@@ -30,17 +30,23 @@ def get_all_game():
                     game_detail = ar.find_elements(By.TAG_NAME, "td")[1].text.split("\n")
                     table_list = browser.find_element(By.XPATH, "//tr").find_elements(By.XPATH, "//td")[i]
                     link = table_list.find_element(By.TAG_NAME, "a").get_attribute("href")
+
+                    try:
+                        summary = game_detail[5]
+                    except Exception:
+                        summary = ""
+
                     game_info = {
                         "Name": game_detail[2],
-                        "Summary": game_detail[5],
+                        "Summary": summary,
                         "Link": link
                     }
                     game_data.append(game_info)
 
+        write_page_no(page_id + 1, end_page)
+
         game_data_save(game_data)
         game_data.clear()
-
-        write_page_no(start_page + 1, end_page)
 
     driver.close()
 
