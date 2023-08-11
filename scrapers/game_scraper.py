@@ -34,7 +34,7 @@ def get_all_game():
                     try:
                         summary = game_detail[5]
                     except Exception:
-                        summary = ""
+                        summary = None
 
                     game_info = {
                         "Name": game_detail[2],
