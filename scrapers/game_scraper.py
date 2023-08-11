@@ -10,8 +10,10 @@ columns = ["Name", "Summary", "Link"]
 
 def get_all_game():
     game_data = []
-    total_games = 0
-    driver = webdriver.Chrome()
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("headless")
+    driver = webdriver.Chrome(options=chrome_options)
 
     start_page, end_page = read_page_no()
 
