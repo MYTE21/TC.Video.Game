@@ -25,11 +25,14 @@ def get_game_details():
         name, summary, link = get_game_info(df_game.loc[idx])
         driver.get(link)
 
-        details = driver.find_elements(By.CLASS_NAME, "summary_details")[2].text.split("\n")[1]
-        genre_list = details.split(":")[1].split(",")
-        genres = []
-        for genre in genre_list:
-            genres.append(genre.strip())
+        try:
+            details = driver.find_elements(By.CLASS_NAME, "summary_details")[2].text.split("\n")[1]
+            genre_list = details.split(":")[1].split(",")
+            genres = []
+            for genre in genre_list:
+                genres.append(genre.strip())
+        except Exception:
+            genres = []
 
         game_details = {
             "Name": name,
