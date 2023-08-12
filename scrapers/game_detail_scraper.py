@@ -24,7 +24,6 @@ def get_game_details():
     for idx in tqdm(range(start, total_game)):
         name, summary, link = get_game_info(df_game.loc[idx])
         driver.get(link)
-        print(link)
 
         details = driver.find_elements(By.CLASS_NAME, "summary_details")[2].text.split("\n")[1]
         genre_list = details.split(":")[1].split(",")
