@@ -73,14 +73,14 @@ def game_data_save(game_data):
 
 
 def read_count():
-    with open("counter.json", "r") as file:
+    with open("pointer/count_pointer.json" , "r") as file:
         data = json.load(file)
 
     return data["count"]
 
 
 def write_count(count):
-    with open("counter.json", "w") as file:
+    with open("pointer/count_pointer.json" , "w") as file:
         data = {"count": count}
         json.dump(data, file)
 
