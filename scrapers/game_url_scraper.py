@@ -17,7 +17,8 @@ def create_headless_webdriver():
     return webdriver.Chrome(options=chrome_options)
 
 
-def get_anime_info(row, browser, i):
+# Get Game Url
+def get_game_url(row, browser, i):
     game_detail = row.find_elements(By.TAG_NAME, "td")[1].text.split("\n")
     table_list = browser.find_element(By.XPATH, "//tr").find_elements(By.XPATH, "//td")[i]
     link = table_list.find_element(By.TAG_NAME, "a").get_attribute("href")
@@ -33,7 +34,8 @@ def get_anime_info(row, browser, i):
     return game_info
 
 
-def get_all_game():
+# Get All Game Urls
+def get_all_game_urls():
     game_data = []
 
     driver = create_headless_webdriver()
@@ -50,7 +52,7 @@ def get_all_game():
             game_row = game_table.find_elements(By.TAG_NAME, "tr")
             for i, row in enumerate(game_row):
                 if i % 2 == 0:
-                    game_info = get_anime_info(row, browser, i)
+                    game_info = get_game_url(row, browser, i)
                     game_data.append(game_info)
 
         write_page_no(page_id + 1, end_page)
@@ -61,8 +63,9 @@ def get_all_game():
     driver.close()
 
 
+# Save Game Data To CSV File
 def game_data_save(game_data):
-    path = os.path.join("../data/raw_data", "game_data.csv")
+    path = os.path.join("../data/raw_data", "game_url_data.csv")
 
     if not os.path.isfile(path):
         df = pd.DataFrame(data=game_data, columns=columns)
@@ -90,4 +93,4 @@ def write_page_no(start, end):
 
 
 if __name__ == "__main__":
-    get_all_game()
+    get_all_game_urls()

@@ -6,22 +6,33 @@ from tqdm import tqdm
 import os
 
 
+# Columns of the DataFrame
 columns = ["Name", "Summary", "Genres"]
 
 
-def get_game_details():
-    df_game = pd.read_csv("../data/raw_data/game_data.csv")
-    total_game = df_game.shape[0]
-
+# Headless Webdriver
+def create_headless_webdriver() :
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("headless")
-    driver = webdriver.Chrome(options=chrome_options)
+    return webdriver.Chrome(options=chrome_options)
 
+
+# Get Game Name, Summary and Link
+def get_game_info(row):
+    name = row["Name"]
+    summary = row["Summary"]
+    link = row["Link"]
+    return name, summary, link
+
+
+def get_game_details():
+    df_game = pd.read_csv("../data/raw_data/game_url_data.csv")
+    start, end = read_count(), df_game.shape[0]
     game_data = []
 
-    start = read_count()
+    driver = create_headless_webdriver()
 
-    for idx in tqdm(range(start, total_game)):
+    for idx in tqdm(range(start, end)):
         name, summary, link = get_game_info(df_game.loc[idx])
         driver.get(link)
 
@@ -35,9 +46,9 @@ def get_game_details():
             genres = []
 
         game_details = {
-            "Name": name,
-            "Summary": summary,
-            "Genres": genres
+            columns[0]: name,
+            columns[1]: summary,
+            columns[2]: genres
         }
         game_data.append(game_details)
         if (idx + 1) % 100 == 0:
@@ -50,15 +61,9 @@ def get_game_details():
     driver.close()
 
 
-def get_game_info(row):
-    name = row["Name"]
-    summary = row["Summary"]
-    link = row["Link"]
-    return name, summary, link
-
-
+# Save Game Data To CSV File
 def game_data_save(game_data):
-    path = os.path.join("../data/raw_data", "game_details.csv")
+    path = os.path.join("../data/raw_data", "game_details_data.csv")
 
     if not os.path.isfile(path):
         df = pd.DataFrame(data=game_data, columns=columns)
@@ -73,14 +78,14 @@ def game_data_save(game_data):
 
 
 def read_count():
-    with open("pointer/count_pointer.json" , "r") as file:
+    with open("pointer/count_pointer.json", "r") as file:
         data = json.load(file)
 
     return data["count"]
 
 
 def write_count(count):
-    with open("pointer/count_pointer.json" , "w") as file:
+    with open("pointer/count_pointer.json", "w") as file:
         data = {"count": count}
         json.dump(data, file)
 
