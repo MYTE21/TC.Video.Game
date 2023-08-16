@@ -1,3 +1,7 @@
 pandas==2.0.2
 selenium==4.10.0
 tqdm==4.66.1
+matplotlib==3.7.2
+fastai==2.7.12
+nbdev==2.3.12
+fastbook==0.0.29
