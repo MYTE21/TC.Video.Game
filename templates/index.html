@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .head {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            height: 5ch;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 25px;
+        }
+
+        form {
+            height: 500px;
+            width: 1000px;
+            background-color: rgb(155, 226, 122);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #text {
+            height: 100px;
+            width: 500px;
+            font-size: 20px;
+        }
+
+        textarea {
+            height: 500px;
+            width: 500px;
+            font-size: 20px;
+        }
+
+        input {
+            font-size: 20px;
+            padding: 10px;
+        }
+    </style>
+    <div class="head"><b>Game Genre Classifier</b></div>
+  <title></title>
+</head>
+
+<body>
+    <div class="center">
+        <form action="/" method="post">
+            <label for="text"><b>Enter Description</b></label> <br />
+            <textarea id="text" name="text"></textarea> <br />
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
